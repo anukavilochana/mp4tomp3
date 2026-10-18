@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MP4toMP3 Converter – Fast, Free & Private</title>
+  <meta name="description" content="Convert MP4 videos to audio in your browser. No uploads, no servers, no limits.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cloudflare.com">
+
+</head>
+<body>
+  <a class="skip" href="#converter">Skip to converter</a>
+
+  <!-- Sticky navigation -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="#top" aria-label="MP4toMP3 home">
+        <span class="logo-mark" aria-hidden="true">♪</span>
+        <span><strong>MP4toMP3</strong><small>File Converter</small></span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="#converter">Converter</a>
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+      </nav>
+      <button id="themeToggle" class="icon-btn" type="button" data-testid="theme-toggle" aria-label="Toggle light or dark theme">◐</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <p class="pill"><span class="dot" aria-hidden="true"></span> 100% in-browser · nothing is uploaded</p>
+      <h1>MP4 to MP3 <span class="grad">Converter</span></h1>
+      <p class="lead">Convert your video files to audio directly in your browser</p> <p color="red">More Private, No Sign In, No Limits </p>
+    </section>
+
+    <!-- Converter card: States 1–4 -->
+    <section id="converter" class="converter" aria-labelledby="convHeading">
+      <h2 id="convHeading" class="sr-only">Converter</h2>
+
+      <label id="dropzone" class="dropzone" for="fileInput" tabindex="0" data-testid="dropzone">
+        <span class="dz-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        </span>
+        <strong>Drag &amp; drop your video files here</strong>
+        <span class="dz-sub">or <u>click to browse</u> — MP4, MOV, WebM, M4V · multiple files OK</span>
+        <input id="fileInput" type="file" accept="video/*,.mp4,.m4v,.mov,.webm" multiple hidden data-testid="file-input">
+      </label>
+      <p id="notice" class="notice" role="alert" hidden></p>
+
+      <div id="queueSection" class="queue" hidden>
+        <div class="queue-head">
+          <h3>Your files <span id="queueCount" class="badge" data-testid="queue-count">0</span></h3>
+          <button id="clearAll" class="btn btn-ghost" type="button" data-testid="clear-all">Clear all</button>
+        </div>
+        <ul id="queueList" class="queue-list" data-testid="queue-list"></ul>
+
+        <div class="controls">
+          <div class="field">
+            <label for="bitrate">Audio bitrate</label>
+            <select id="bitrate" data-testid="bitrate-select">
+              <option value="128">128 kbps — Standard</option>
+              <option value="192" selected>192 kbps — Good quality (recommended)</option>
+              <option value="320">320 kbps — Best quality</option>
+            </select>
+            <small>Higher bitrate = better audio and larger output file.</small>
+          </div>
+          <button id="convertAll" class="btn btn-primary btn-lg" type="button" data-testid="convert-all">Convert All Files</button>
+        </div>
+        <button id="downloadAll" class="btn btn-success btn-lg" type="button" data-testid="download-all" disabled>⬇ Download All</button>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="section" aria-labelledby="featHeading">
+      <h2 id="featHeading">Why Choose This Converter</h2>
+      <div class="grid-4">
+        <article class="tile"><span class="tile-icon c-blue" aria-hidden="true">⚡</span><h3>Lightning Fast</h3><p>Browser-based processing converts your files quickly with no server round-trip delays.</p></article>
+        <article class="tile"><span class="tile-icon c-green" aria-hidden="true">⛨</span><h3>100% Private</h3><p>Your files are processed entirely on your device and never uploaded anywhere.</p></article>
+        <article class="tile"><span class="tile-icon c-cyan" aria-hidden="true">◎</span><h3>Completely Free</h3><p>No subscription, no hidden fees, no watermarks. Convert as many files as you like.</p></article>
+        <article class="tile"><span class="tile-icon c-amber" aria-hidden="true">∞</span><h3>Zero Limits</h3><p>No sign-up required and no daily caps. Convert unlimited files anytime.</p></article>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="section" aria-labelledby="howHeading">
+      <h2 id="howHeading">How It Works</h2>
+      <ol class="steps">
+        <li class="tile step"><span class="num" aria-hidden="true">1</span><h3>Upload</h3><p>Drag and drop your MP4 or other video files into the converter, or click to browse your device.</p></li>
+        <li class="tile step"><span class="num" aria-hidden="true">2</span><h3>Convert</h3><p>Choose your preferred audio quality and click convert. Processing happens instantly in your browser.</p></li>
+        <li class="tile step"><span class="num" aria-hidden="true">3</span><h3>Download</h3><p>Preview each result, then download it individually or grab everything as one ZIP.</p></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <strong>MP4toMP3 Converter</strong>
+        <p class="ok-text">© <span id="copyright-year"></span> All Right Reserved. Made for ❤️</p>
+      </div>
+      
+      <!-- LinkedIn Icon එක සහිත කොටස -->
+      <div class="footer-social">
+        <a href="https://linkedin.com/anukavilochana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
+         <i class="fa-brands fa-linkedin"></i>
+        </a>
+     </div>
+
+      
+
+      <nav aria-label="Footer">
+        <a href="#converter">Converter</a>
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+      </nav>
+    </div>
+</footer>
+
+
+  <script src="script.js"></script>
+  <script>
+    // Set current year in footer
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
