@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Background Remover - Free, Private &amp; In-Browser | Toolpocket</title>
+  <meta name="description" content="Remove image backgrounds with AI directly in your browser. No uploads, no sign-up, 100% free and private.">
+  <link rel="canonical" href="https://toolswift.com/tools/background-remover.html">
+  <meta name="theme-color" content="#0f172a">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+    .checker{
+      background-color:#1e293b;
+      background-image:
+        linear-gradient(45deg,#334155 25%,transparent 25%,transparent 75%,#334155 75%),
+        linear-gradient(45deg,#334155 25%,transparent 25%,transparent 75%,#334155 75%);
+      background-size:20px 20px;background-position:0 0,10px 10px;
+    }
+    .orb{position:fixed;border-radius:9999px;filter:blur(110px);z-index:0;pointer-events:none}
+    .indet{animation:slide 1.2s ease-in-out infinite}
+    @keyframes slide{0%{margin-left:-40%}100%{margin-left:100%}}
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen antialiased">
+  <div class="orb w-96 h-96 bg-indigo-600/25 -top-24 -left-24"></div>
+  <div class="orb w-96 h-96 bg-fuchsia-600/10 bottom-0 right-0"></div>
+
+  <main class="relative z-10 max-w-5xl mx-auto px-4 py-6 sm:py-10">
+    <a href="../index.html" class="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition text-sm">
+      <i class="fa-solid fa-arrow-left"></i> Back to Toolpocket
+    </a>
+
+    <header class="text-center mt-8 mb-8">
+      <div class="w-14 h-14 mx-auto grid place-items-center rounded-2xl bg-fuchsia-500/20 text-fuchsia-300 mb-4"><i class="fa-solid fa-wand-magic-sparkles text-2xl"></i></div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">AI Background Remover</h1>
+      <p class="mt-2 text-slate-300">Remove backgrounds in seconds. Your image never leaves your device.</p>
+    </header>
+
+    <section class="rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 p-4 sm:p-8 shadow-2xl shadow-black/30">
+
+      <!-- Drop zone -->
+      <div id="drop" tabindex="0" role="button" aria-label="Choose an image"
+           class="flex flex-col items-center justify-center text-center gap-3 min-h-[260px] rounded-2xl border-2 border-dashed border-white/20 hover:border-indigo-400/70 hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition cursor-pointer p-6">
+        <i class="fa-solid fa-cloud-arrow-up text-4xl text-indigo-400"></i>
+        <p class="text-lg font-semibold">Drag &amp; drop your image here</p>
+        <p class="text-sm text-slate-400">or tap to browse · PNG, JPG, WebP</p>
+        <span class="mt-2 inline-flex items-center justify-center min-h-[48px] px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium transition">Select Image</span>
+        <input id="file" type="file" accept="image/png,image/jpeg,image/webp" class="hidden">
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="hidden py-10 text-center">
+        <i class="fa-solid fa-circle-notch fa-spin text-4xl text-indigo-400"></i>
+        <p id="loadMsg" class="mt-4 text-lg font-medium">📥 Loading Local AI Model... (First time may take a few seconds)</p>
+        <div class="mt-5 max-w-md mx-auto h-3 rounded-full bg-white/10 overflow-hidden">
+          <div id="bar" class="h-full w-0 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 transition-all duration-300"></div>
+        </div>
+        <p id="pct" class="mt-2 text-sm text-slate-400">0%</p>
+      </div>
+
+      <!-- Error -->
+      <p id="error" class="hidden mt-4 rounded-xl bg-red-500/10 border border-red-400/20 text-red-300 px-4 py-3 text-sm" role="alert"></p>
+
+      <!-- Result -->
+      <div id="result" class="hidden">
+        <div class="grid gap-4 md:grid-cols-2">
+          <figure>
+            <figcaption class="mb-2 text-sm font-semibold text-slate-300"><i class="fa-regular fa-image mr-2"></i>Original</figcaption>
+            <div class="rounded-xl overflow-hidden border border-white/10 bg-slate-800 grid place-items-center">
+              <img id="orig" alt="Original image" class="max-h-[420px] w-auto max-w-full object-contain">
+            </div>
+          </figure>
+          <figure>
+            <figcaption class="mb-2 text-sm font-semibold text-slate-300"><i class="fa-solid fa-wand-magic-sparkles mr-2 text-fuchsia-300"></i>Background Removed</figcaption>
+            <div class="checker rounded-xl overflow-hidden border border-white/10 grid place-items-center">
+              <img id="out" alt="Background removed image" class="max-h-[420px] w-auto max-w-full object-contain">
+            </div>
+          </figure>
+        </div>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          <a id="download" download="background-removed.png" class="inline-flex items-center justify-center gap-2 min-h-[52px] px-8 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold shadow-lg shadow-indigo-500/30 transition">
+            <i class="fa-solid fa-download"></i> Download PNG
+          </a>
+          <button id="again" class="inline-flex items-center justify-center gap-2 min-h-[52px] px-8 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition">
+            <i class="fa-solid fa-rotate-left"></i> Remove Another
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <p class="mt-6 text-center text-xs text-slate-400">
+      <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i>
+      Processed 100% in your browser. The AI model is downloaded once, then cached for faster use next time.
+    </p>
+  </main>
+
+  <script type="module">
+    import { removeBackground } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm";
+
+    const $ = id => document.getElementById(id);
+    const drop = $("drop"), fileInput = $("file"), loading = $("loading"), result = $("result"), errBox = $("error");
+    const bar = $("bar"), pct = $("pct"), loadMsg = $("loadMsg");
+    const MAX_MB = 25, OK = ["image/png", "image/jpeg", "image/webp"];
+    let urls = [];
+
+    const show = (el, on) => el.classList.toggle("hidden", !on);
+    const showError = m => { errBox.textContent = m; show(errBox, true); };
+    const clearUrls = () => { urls.forEach(URL.revokeObjectURL); urls = []; };
+
+    function setProgress(p, text) {
+      bar.classList.remove("indet", "w-1/3");
+      bar.style.width = p + "%"; pct.textContent = text ?? Math.round(p) + "%";
+    }
+    function setIndeterminate(text) {
+      bar.style.width = "40%"; bar.classList.add("indet"); pct.textContent = text;
+    }
+
+    function reset() {
+      clearUrls(); fileInput.value = "";
+      show(result, false); show(loading, false); show(errBox, false); show(drop, true);
+    }
+
+    async function handle(file) {
+      show(errBox, false);
+      if (!file) return;
+      if (!OK.includes(file.type)) return showError("Please choose a PNG, JPG, or WebP image.");
+      if (file.size > MAX_MB * 1024 * 1024) return showError(`That file is too large. Max size is ${MAX_MB} MB.`);
+
+      clearUrls();
+      const origUrl = URL.createObjectURL(file); urls.push(origUrl);
+      show(drop, false); show(result, false); show(loading, true);
+      loadMsg.textContent = "📥 Loading Local AI Model... (First time may take a few seconds)";
+      setProgress(0);
+
+      const fetched = {};
+      try {
+        const blob = await removeBackground(file, {
+          output: { format: "image/png" },
+          progress: (key, current, total) => {
+            if (key.startsWith("fetch")) {
+              fetched[key] = total ? current / total : 0;
+              const vals = Object.values(fetched);
+              setProgress(vals.reduce((a, b) => a + b, 0) / vals.length * 100);
+            } else {
+              loadMsg.textContent = "✨ Removing background on your device...";
+              setIndeterminate("Processing…");
+            }
+          }
+        });
+        const outUrl = URL.createObjectURL(blob); urls.push(outUrl);
+        $("orig").src = origUrl; $("out").src = outUrl; $("download").href = outUrl;
+        const base = file.name.replace(/\.[^.]+$/, "") || "image";
+        $("download").download = base + "-no-bg.png";
+        show(loading, false); show(result, true);
+      } catch (e) {
+        console.error(e);
+        show(loading, false); show(drop, true);
+        showError("Something went wrong while processing. Check your connection for the first model download, or try a different image.");
+      }
+    }
+
+    drop.addEventListener("click", () => fileInput.click());
+    drop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); } });
+    fileInput.addEventListener("change", () => handle(fileInput.files[0]));
+    ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("border-indigo-400", "bg-white/10"); }));
+    ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("border-indigo-400", "bg-white/10"); }));
+    drop.addEventListener("drop", e => handle(e.dataTransfer.files[0]));
+    $("again").addEventListener("click", reset);
+  </script>
+</body>
+</html>
